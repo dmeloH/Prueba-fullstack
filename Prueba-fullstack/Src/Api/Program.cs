@@ -19,31 +19,48 @@ public partial class Program
             options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 36)))
         );
 
-        // Registro de repositorio
+        // Inyección de dependencias
         builder.Services.AddScoped<ITaskRepository, TaskRepository>();
-
-        // Casos de uso - interfaces con sus implementaciones
         builder.Services.AddScoped<ICreateTask, CreateTask>();
         builder.Services.AddScoped<IGetAllTasks, GetAllTasks>();
         builder.Services.AddScoped<IUpdateTask, UpdateTask>();
         builder.Services.AddScoped<IDeleteTask, DeleteTask>();
 
-        // Agregar soporte para controladores y Swagger
+        // Controladores y Swagger
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
+        // ✅ Política CORS para permitir peticiones desde el frontend
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowFrontend",
+                policy =>
+                {
+                    policy.WithOrigins("http://localhost:5173", "https://localhost:5173")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+        });
+
         var app = builder.Build();
 
-        // Middleware de desarrollo
+        // Swagger solo en entorno de desarrollo
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
             app.UseSwaggerUI();
         }
 
+        // ✅ Redirección HTTPS (opcional pero recomendado)
+        app.UseHttpsRedirection();
+
+        // ✅ Habilitar CORS antes de cualquier autorización o mapeo
+        app.UseCors("AllowFrontend");
+
         app.UseAuthorization();
         app.MapControllers();
+
         app.Run();
     }
 }
