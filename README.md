@@ -83,7 +83,7 @@ Esta estructura permite mantener una separación clara de responsabilidades, fac
 ### 2. Clonar el Repositorio
 
 ```bash
-git clone https://github.com/tu-usuario/Prueba-fullstack.git
+git clone https://github.com/dmeloH/Prueba-fullstack.git
 cd Prueba-fullstack
 ```
 
@@ -142,7 +142,7 @@ O donde esté corriendo tu servidor.
 
 ---
 
-## 🧑‍💻 Autor
+## 👩‍💻 Autoría
 
 **Daniela Melo**  
 _Desarrolladora Full Stack_
